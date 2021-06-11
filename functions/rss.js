@@ -69,6 +69,7 @@ function buildRssItems(items) {
         <description>${desc}</description>
         <author>Satheesh</author>
         <link>${audio}</link>
+        <enclosure type="audio/mpeg">${audio}</enclosure>
         <guid>${item.canonicalId}</guid>
         <pubDate>${item.createdOn}</pubDate>
         </item>
