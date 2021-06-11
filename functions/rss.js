@@ -4,7 +4,7 @@ async function getPosts() {
   return new Promise((resolve, reject) => {
     const query = `
       query {
-        getSwellcast(alias:"worldnews",offset:1,limit:1){
+        getSwellcast(alias:"technews",offset:1,limit:1){
           id
           swells{
             id
