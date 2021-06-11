@@ -2,8 +2,8 @@ const https = require("https");
 
 async function getPosts() {
   return new Promise((resolve, reject) => {
-    const query = `{ 
-      query : {
+    const query = `
+      query {
         getSwellcast(alias:"technews",offset:1,limit:1){
           id
           swells{
@@ -17,7 +17,8 @@ async function getPosts() {
             }
           }
         }
-      }`;
+      }
+      `;
 
     const options = {
       protocol: "https:",
