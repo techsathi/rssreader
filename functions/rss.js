@@ -2,31 +2,28 @@ const https = require("https");
 
 async function getPosts() {
   return new Promise((resolve, reject) => {
-    const query = `
-    query {
-      microblogCollection {
-        items {
-          sys {
-            firstPublishedAt
+    const query = '{ 
+      query : {
+        getSwellcast(alias:"technews",offset:1,limit:1){
+          id
+          swells{
             id
+            createdOn
+            canonicalId
+            title
+            description
+            audio{
+              url
+            }
           }
-          text
-          link
-          linkText
         }
-      }
-    }
-    `;
+      }`;
 
     const options = {
       protocol: "https:",
-      hostname: "graphql.contentful.com",
-      path: "/content/v1/spaces/4nhaj6wzvnco",
+      hostname: "widgetapi.swell.life",
+      path: "/graphql",
       method: "POST",
-      headers: {
-        Authorization: "Bearer F91A7b3FyjTFeH0sN6pYIfo6Nu1WZ2byX8Rdc4McGUI",
-        "Content-Type": "application/json",
-      },
     };
 
     let posts = "";
@@ -51,28 +48,23 @@ async function getPosts() {
   });
 }
 
-function buildRssItems(items) {
+function buildRssItems(response) {
   const truncateLength = 44;
-
+  const items= response.data.getSwellcast.swells
   return items
     .map((item) => {
-      const hasText = item.text;
-      const hasLink = item.link;
-      const titleMaybeTruncated = hasText && item.text.length > truncateLength ? "..." : "";
-      const title = hasText
-        ? `${item.text.slice(0, truncateLength)}${titleMaybeTruncated}`
-        : "New post";
-      const maybeLink = hasLink ? ` - ${item.link}` : "";
-      const description = hasText ? `${item.text}${maybeLink}` : "";
-
+      const title = item.title;
+      const desc = item.description;
+      const audio = item.audio.url;
+     
       return `
         <item>
         <title>${title}</title>
         <description>${description}</description>
-        <author>whitep4nth3r@gmail.com (whitep4nth3r)</author>
-        <link>https://thingoftheday.xyz#${item.sys.id}</link>
-        <guid>https://thingoftheday.xyz#${item.sys.id}</guid>
-        <pubDate>${item.sys.firstPublishedAt}</pubDate>
+        <author>Satheesh</author>
+        <link>${audio}</link>
+        <guid>${item.canonicalId}</guid>
+        <pubDate>${item.createdOn}</pubDate>
         </item>
         `;
     })
@@ -83,10 +75,10 @@ exports.handler = async function (event, context) {
   const rssFeed = `<?xml version="1.0"?>
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>thingoftheday.xyz</title>
-    <atom:link href="https://thingoftheday.xyz/.netlify/functions/rss" rel="self" type="application/rss+xml" />
-    <link>https://thingoftheday.xyz</link>
-    <description>thingoftheday is a lightweight microblogging site powered by Contentful and vanilla HTML, CSS and JavaScript.</description>
+    <title>Tech News Swellcast</title>
+    <atom:link href="https://reverent-albattani-08df3f.netlify.app/.netlify/functions/rss" rel="self" type="application/rss+xml" />
+    <link>https://swellcast.com/technews</link>
+    <description>Swellcast by Satheesh </description>
     ${buildRssItems(await getPosts())}
   </channel>
   </rss>`;
