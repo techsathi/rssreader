@@ -41,7 +41,7 @@ async function getPosts() {
       res.on("end", () => {
         console.log("response" + posts);
         const parsedPosts = JSON.parse(posts);
-        resolve(parsedPosts.data.microblogCollection.items);
+        resolve(parsedPosts.data.getSwellcast.swells);
       });
     });
 
@@ -54,9 +54,8 @@ async function getPosts() {
   });
 }
 
-function buildRssItems(response) {
+function buildRssItems(items) {
   const truncateLength = 44;
-  const items= response.data.getSwellcast.swells
   return items
     .map((item) => {
       const title = item.title;
