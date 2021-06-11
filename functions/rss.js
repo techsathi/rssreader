@@ -2,7 +2,7 @@ const https = require("https");
 
 async function getPosts() {
   return new Promise((resolve, reject) => {
-    const query = '{ 
+    const query = `{ 
       query : {
         getSwellcast(alias:"technews",offset:1,limit:1){
           id
@@ -60,7 +60,7 @@ function buildRssItems(response) {
       return `
         <item>
         <title>${title}</title>
-        <description>${description}</description>
+        <description>${desc}</description>
         <author>Satheesh</author>
         <link>${audio}</link>
         <guid>${item.canonicalId}</guid>
